@@ -33,7 +33,8 @@ public class LandQuakeMarker extends EarthquakeMarker {
 		// and how it is set in the EarthquakeMarker constructor
 		
 		// TODO: Implement this method
-		
+		pg.triangle(x-5, y+5, x, y-5, x+5, y+5);
+
 	}
 	
 
