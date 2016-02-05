@@ -159,7 +159,7 @@ public class EarthquakeCityMap extends PApplet {
 		if(quakeMarkers.size() > 1){
 			Date one = (Date) quakeMarkers.get(0).getProperty("time");
 			Date two = (Date) quakeMarkers.get(1).getProperty("time");
-			return Math.abs(one.getTime() - two.getTime()) / 1000;
+			return Math.abs(one.getTime() - two.getTime()) / 21600;
 		}
 		return 700;
 		
