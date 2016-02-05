@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
@@ -128,19 +129,44 @@ public class EarthquakeCityMap extends PApplet {
 		// (3) Add markers to map
 		// NOTE: Country markers are not added to the map. They are used
 		// for their geometric properties
-		map.addMarkers(quakeMarkers);
+		// map.addMarkers(quakeMarkers);
 		map.addMarkers(cityMarkers);
 
-		sortAndPrint(20);
+		sortAndPrint(10);
+		sortByDate();
+		
 	} // End setup
 
 	public void draw() {
 		background(0);
+		if (!quakeMarkers.isEmpty()) {
+			Marker m = quakeMarkers.remove(0);
+			System.out.println(m.getProperty("time"));
+			map.addMarker(m);
+		}
 		map.draw();
 		addKey();
 
+		if (!quakeMarkers.isEmpty()) {
+			try {
+				Thread.sleep(calcTimeDiff());
+			} catch (InterruptedException e) {
+				// who cares
+				e.printStackTrace();
+			}
+		}
 	}
 
+	private long calcTimeDiff(){
+		if(quakeMarkers.size() > 1){
+			Date one = (Date) quakeMarkers.get(0).getProperty("time");
+			Date two = (Date) quakeMarkers.get(1).getProperty("time");
+			return Math.abs(one.getTime() - two.getTime()) / 1000;
+		}
+		return 700;
+		
+	}
+	
 	private void sortAndPrint(int numToPrint) {
 		List<Marker> sorted = quakeMarkers;
 		Collections.sort(sorted, new Comparator<Marker>() {
@@ -148,8 +174,8 @@ public class EarthquakeCityMap extends PApplet {
 			public int compare(Marker m1, Marker m2) {
 				double one = Double.parseDouble(m1.getProperty("magnitude").toString());
 				double two = Double.parseDouble(m2.getProperty("magnitude").toString());
-				if(one < two) return -1;
-				else if(one>two) return 1;
+				if (one < two) return -1;
+				else if (one > two) return 1;
 				return 0;
 			}
 		});
@@ -157,6 +183,18 @@ public class EarthquakeCityMap extends PApplet {
 		for (int i = 0; i < Math.min(numToPrint, sorted.size()); i++) {
 			System.out.println(sorted.get(i).getProperty("magnitude"));
 		}
+	}
+	
+	private void sortByDate() {
+		quakeMarkers.sort(new Comparator<Marker>() {
+
+			@Override
+			public int compare(Marker m1, Marker m2) {
+				Date one = (Date) m1.getProperty("time");
+				Date two = (Date) m2.getProperty("time");
+				return one.compareTo(two);
+			}
+		});
 	}
 
 	// and then call that method from setUp
