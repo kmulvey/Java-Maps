@@ -140,9 +140,7 @@ public class EarthquakeCityMap extends PApplet {
 	public void draw() {
 		background(0);
 		if (!quakeMarkers.isEmpty()) {
-			Marker m = quakeMarkers.remove(0);
-			System.out.println(m.getProperty("time"));
-			map.addMarker(m);
+			map.addMarker(quakeMarkers.remove(0));
 		}
 		map.draw();
 		addKey();
