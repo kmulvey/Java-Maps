@@ -1,9 +1,14 @@
 package parsing;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.PointFeature;
@@ -51,7 +56,22 @@ public class ParseFeed {
 					// get magnitude from title
 					point.putProperty("magnitude", Float.parseFloat(titleStr.substring(2, 5)));
 				}
+				
+				// Sets time if existing
+				// <dt>Time</dt><dd>2016-02-05 16:35:21 UTC</dd>
+				final Pattern pattern = Pattern.compile("<dt>Time</dt><dd>(.+?)</dd>");
 
+				String timeStr = getStringVal(itemXML[i], "summary");
+				final Matcher matcher = pattern.matcher(timeStr);
+				matcher.find();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz");
+				try {
+					Date when = dateFormat.parse(matcher.group(1));
+					point.putProperty("time", when);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
 				// Sets depth(elevation) if existing
 				float depthVal = getFloatVal(itemXML[i], "georss:elev");
 				

@@ -131,7 +131,7 @@ public class EarthquakeCityMap extends PApplet {
 		map.addMarkers(quakeMarkers);
 		map.addMarkers(cityMarkers);
 
-		sortAndPrint(10);
+		sortAndPrint(20);
 	} // End setup
 
 	public void draw() {
@@ -142,18 +142,20 @@ public class EarthquakeCityMap extends PApplet {
 	}
 
 	private void sortAndPrint(int numToPrint) {
-		// this is 100% stupid as quakeMarkers is not of type EarthquakeMarker
-		EarthquakeMarker[] eMarkers = (EarthquakeMarker[]) quakeMarkers.toArray();
-		List<EarthquakeMarker> sorted = Arrays.asList(eMarkers);
-		Collections.sort(sorted, new Comparator<EarthquakeMarker>() {
+		List<Marker> sorted = quakeMarkers;
+		Collections.sort(sorted, new Comparator<Marker>() {
 			@Override
-			public int compare(EarthquakeMarker m1, EarthquakeMarker m2) {
-				return (int) Math.abs(m1.getMagnitude() - m2.getMagnitude());
+			public int compare(Marker m1, Marker m2) {
+				double one = Double.parseDouble(m1.getProperty("magnitude").toString());
+				double two = Double.parseDouble(m2.getProperty("magnitude").toString());
+				if(one < two) return -1;
+				else if(one>two) return 1;
+				return 0;
 			}
 		});
 		Collections.reverse(sorted);
-		for(int i=0; i<Math.min(numToPrint, sorted.size());i++){
-			System.out.println(sorted.get(i).getMagnitude());
+		for (int i = 0; i < Math.min(numToPrint, sorted.size()); i++) {
+			System.out.println(sorted.get(i).getProperty("magnitude"));
 		}
 	}
 
