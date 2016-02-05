@@ -55,8 +55,9 @@ public abstract class EarthquakeMarker extends CommonMarker
 		this.radius = 1.75f*getMagnitude();
 	}
 	
-	// TODO: Add the method:
-	// public int compareTo(EarthquakeMarker marker)
+	public int compareTo(EarthquakeMarker marker){
+		return (int) Math.abs(this.getMagnitude() - marker.getMagnitude());
+	}
 	
 	
 	// calls abstract method drawEarthquake and then checks age and draws X if needed
